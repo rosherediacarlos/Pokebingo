@@ -1,0 +1,1568 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #090817;
+    --bg-light: #11102a;
+
+    --pink: #ff9ed8;
+    --pink-light: #ffd4ee;
+
+    --purple: #bba6ff;
+    --purple-dark: #6f55d9;
+
+    --cyan: #8de9ff;
+    --gold: #ffe59a;
+
+    --green: #a8f5bd;
+
+    --text: #ffffff;
+    --muted: #aaa6c1;
+
+    --border: rgba(255, 255, 255, 0.1);
+
+    --shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    color: var(--text);
+
+    background:
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(255, 158, 216, 0.12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(187, 166, 255, 0.12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(141, 233, 255, 0.08),
+            transparent 35%
+        ),
+        var(--bg);
+
+    overflow-x: hidden;
+}
+
+
+/* ================================
+   ESTRELLAS
+================================ */
+
+body::before,
+body::after {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,.7) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,.4) 1px, transparent 1px);
+
+    background-size:
+        90px 90px,
+        140px 140px;
+
+    background-position:
+        10px 20px,
+        60px 80px;
+
+    opacity: .25;
+
+    z-index: -1;
+}
+
+
+/* ================================
+   CONTENEDOR
+================================ */
+
+.game-container {
+    width: min(1100px, calc(100% - 30px));
+
+    margin: 0 auto;
+
+    padding:
+        55px 0
+        80px;
+}
+
+
+/* ================================
+   HERO
+================================ */
+
+.hero {
+    text-align: center;
+
+    margin-bottom: 35px;
+}
+
+.eyebrow {
+    color: var(--gold);
+
+    font-size: .78rem;
+
+    letter-spacing: .14em;
+
+    font-weight: 800;
+
+    margin-bottom: 14px;
+}
+
+.hero h1 {
+    font-size:
+        clamp(2.1rem, 6vw, 4.2rem);
+
+    line-height: 1;
+
+    margin-bottom: 15px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--pink-light),
+            white,
+            var(--purple)
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.hero h1 span {
+    color: var(--gold);
+    -webkit-text-fill-color: initial;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+
+    color: var(--pink-light);
+
+    margin-bottom: 12px;
+}
+
+.intro {
+    color: var(--muted);
+
+    line-height: 1.7;
+
+    font-size: .98rem;
+}
+
+
+/* ================================
+   DRAW PANEL
+================================ */
+
+.draw-panel {
+    padding: 25px;
+
+    border-radius: 25px;
+
+    border: 1px solid var(--border);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 158, 216, .09),
+            rgba(187, 166, 255, .09)
+        );
+
+    box-shadow: var(--shadow);
+
+    margin-bottom: 15px;
+
+    text-align: center;
+}
+
+.draw-title {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    color: var(--gold);
+
+    font-size: .85rem;
+
+    letter-spacing: .12em;
+
+    font-weight: 900;
+
+    margin-bottom: 20px;
+}
+
+
+/* ================================
+   CURRENT DRAW
+================================ */
+
+.current-draw {
+    min-height: 240px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 15px;
+}
+
+.draw-placeholder {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--muted);
+}
+
+.draw-placeholder strong {
+    color: white;
+}
+
+.placeholder-ball {
+    font-size: 4rem;
+
+    animation:
+        floatingBall 2s ease-in-out infinite;
+}
+
+@keyframes floatingBall {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px) rotate(5deg);
+    }
+}
+
+
+.draw-pokemon {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    animation: drawPokemonIn .65s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes drawPokemonIn {
+
+    0% {
+        opacity: 0;
+        transform:
+            scale(.5)
+            translateY(25px)
+            rotate(-5deg);
+    }
+
+    60% {
+        transform:
+            scale(1.08)
+            translateY(-4px)
+            rotate(2deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform:
+            scale(1)
+            translateY(0)
+            rotate(0);
+    }
+}
+
+.draw-pokemon-image-wrapper {
+    width: 155px;
+    height: 155px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.15),
+            rgba(187,166,255,.08) 55%,
+            transparent 70%
+        );
+
+    box-shadow:
+        0 0 30px rgba(255, 229, 154, .2),
+        0 0 80px rgba(187, 166, 255, .12);
+
+    margin-bottom: 8px;
+}
+
+.draw-pokemon-image {
+    width: 135px;
+    height: 135px;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(0 12px 15px rgba(0,0,0,.35));
+}
+
+.draw-pokemon-name {
+    font-size: 1.45rem;
+
+    font-weight: 900;
+
+    color: white;
+
+    margin-top: 5px;
+}
+
+.draw-pokemon-status {
+    color: var(--gold);
+
+    font-size: .8rem;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: .12em;
+
+    margin-top: 4px;
+}
+
+
+/* ================================
+   DRAW STATUS
+================================ */
+
+.draw-status {
+    max-width: 550px;
+
+    margin: 5px auto 0;
+
+    text-align: left;
+}
+
+.draw-status > div:first-child {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 8px;
+}
+
+.status-label {
+    color: var(--muted);
+
+    font-size: .85rem;
+}
+
+#drawCount {
+    color: var(--gold);
+}
+
+.draw-progress {
+    height: 8px;
+
+    background: rgba(255,255,255,.07);
+
+    border-radius: 999px;
+
+    overflow: hidden;
+}
+
+#drawProgressBar {
+    height: 100%;
+
+    width: 0%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--pink),
+            var(--purple),
+            var(--cyan)
+        );
+
+    transition: width .4s ease;
+}
+
+
+/* ================================
+   HISTORIAL
+================================ */
+
+.history-panel {
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,.025);
+}
+
+.history-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 14px;
+
+    color: var(--muted);
+
+    font-size: .85rem;
+
+    font-weight: 800;
+}
+
+.history-header span {
+    color: var(--gold);
+
+    background: rgba(255,229,154,.08);
+
+    border: 1px solid rgba(255,229,154,.15);
+
+    padding: 4px 10px;
+
+    border-radius: 999px;
+}
+
+.draw-history {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.history-empty {
+    width: 100%;
+
+    text-align: center;
+
+    color: #77738b;
+
+    padding: 10px;
+}
+
+.history-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 6px 10px 6px 6px;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,.04);
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    color: var(--muted);
+
+    font-size: .76rem;
+
+    animation: historyIn .35s ease;
+}
+
+@keyframes historyIn {
+
+    from {
+        opacity: 0;
+        transform: scale(.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.history-item img {
+    width: 28px;
+    height: 28px;
+
+    object-fit: contain;
+}
+
+.history-item.current {
+    color: white;
+
+    border-color:
+        rgba(255,229,154,.45);
+
+    background:
+        rgba(255,229,154,.08);
+
+    box-shadow:
+        0 0 15px rgba(255,229,154,.12);
+}
+
+
+/* ================================
+   CONTROLES
+================================ */
+
+.controls {
+    display: flex;
+
+    justify-content: center;
+
+    margin: 25px 0;
+}
+
+.new-card-button,
+.play-again-button {
+    border: none;
+
+    cursor: pointer;
+
+    color: #171326;
+
+    font-weight: 900;
+
+    font-size: .95rem;
+
+    padding: 13px 22px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold),
+            var(--pink)
+        );
+
+    box-shadow:
+        0 8px 25px rgba(255,158,216,.15);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.new-card-button:hover,
+.play-again-button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 30px rgba(255,158,216,.25);
+}
+
+.new-card-button:active,
+.play-again-button:active {
+    transform: scale(.96);
+}
+
+
+/* ================================
+   BINGO SECTION
+================================ */
+
+.bingo-section {
+    padding: 25px;
+
+    border-radius: 25px;
+
+    border: 1px solid var(--border);
+
+    background:
+        rgba(255,255,255,.035);
+
+    box-shadow: var(--shadow);
+}
+
+.card-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 18px;
+}
+
+.small-title {
+    color: var(--gold);
+
+    font-size: .7rem;
+
+    letter-spacing: .15em;
+
+    font-weight: 900;
+}
+
+.card-header h2 {
+    margin-top: 5px;
+
+    font-size:
+        clamp(1.3rem, 4vw, 1.9rem);
+}
+
+.counter-box {
+    text-align: center;
+
+    min-width: 90px;
+
+    padding: 10px 15px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,255,255,.05);
+
+    border: 1px solid var(--border);
+}
+
+.counter-box strong {
+    display: block;
+
+    font-size: 1.3rem;
+
+    color: var(--pink-light);
+}
+
+.counter-box span {
+    font-size: .7rem;
+
+    color: var(--muted);
+}
+
+
+/* ================================
+   PROGRESS
+================================ */
+
+.progress-container {
+    height: 10px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border-radius: 999px;
+
+    overflow: hidden;
+
+    margin-bottom: 25px;
+}
+
+.progress-bar {
+    width: 0%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--pink),
+            var(--purple)
+        );
+
+    border-radius: inherit;
+
+    transition: width .4s ease;
+}
+
+
+/* ================================
+   CARTÓN
+================================ */
+
+.bingo-board {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+}
+
+.bingo-cell {
+    position: relative;
+
+    min-height: 180px;
+
+    padding: 14px;
+
+    border-radius: 18px;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.06),
+            rgba(255,255,255,.025)
+        );
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+.bingo-cell:hover {
+    transform: translateY(-4px);
+
+    border-color:
+        rgba(255,158,216,.3);
+}
+
+.bingo-cell img {
+    width: 105px;
+    height: 105px;
+
+    object-fit: contain;
+
+    transition:
+        transform .25s ease,
+        filter .25s ease;
+}
+
+.pokemon-name {
+    color: var(--muted);
+
+    font-size: .82rem;
+
+    font-weight: 800;
+
+    text-align: center;
+}
+
+
+/* ================================
+   POKÉMON DISPONIBLE
+================================ */
+
+.bingo-cell.available {
+    border-color:
+        rgba(255,229,154,.7);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,229,154,.13),
+            rgba(187,166,255,.09)
+        );
+
+    box-shadow:
+        0 0 25px rgba(255,229,154,.15);
+
+    animation:
+        availablePulse 1.5s ease infinite;
+}
+
+.bingo-cell.available img {
+    transform: scale(1.08);
+
+    filter:
+        drop-shadow(
+            0 0 15px
+            rgba(255,229,154,.65)
+        );
+}
+
+@keyframes availablePulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 15px rgba(255,229,154,.12);
+    }
+
+    50% {
+        box-shadow:
+            0 0 30px rgba(255,229,154,.28);
+    }
+}
+
+
+/* ================================
+   CASILLA MARCADA
+================================ */
+
+.bingo-cell.marked {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,158,216,.15),
+            rgba(187,166,255,.15)
+        );
+
+    border-color:
+        rgba(255,158,216,.65);
+
+    box-shadow:
+        0 0 25px rgba(255,158,216,.18);
+}
+
+.bingo-cell.marked img {
+    transform: scale(.88);
+
+    filter:
+        grayscale(.35)
+        brightness(.7);
+}
+
+.bingo-cell.marked .pokemon-name {
+    color: white;
+}
+
+
+/* ================================
+   SELLO
+================================ */
+
+.stamp {
+    position: absolute;
+
+    inset: 0;
+
+    display: grid;
+
+    place-items: center;
+
+    pointer-events: none;
+}
+
+.stamp::before {
+    content: "✓";
+
+    width: 60px;
+    height: 60px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    border: 4px solid var(--pink);
+
+    color: var(--pink);
+
+    font-size: 2.2rem;
+
+    font-weight: 1000;
+
+    transform:
+        rotate(-12deg)
+        scale(0);
+
+    opacity: 0;
+
+    box-shadow:
+        0 0 20px rgba(255,158,216,.45);
+
+    animation:
+        stampIn .35s cubic-bezier(.2,.8,.2,1)
+        forwards;
+}
+
+@keyframes stampIn {
+
+    0% {
+        transform:
+            rotate(-30deg)
+            scale(1.6);
+
+        opacity: 0;
+    }
+
+    70% {
+        transform:
+            rotate(-12deg)
+            scale(.9);
+
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            rotate(-12deg)
+            scale(1);
+
+        opacity: 1;
+    }
+}
+
+
+/* ================================
+   CLICK INCORRECTO
+================================ */
+
+.bingo-cell.not-available {
+    animation:
+        shakeCell .4s ease;
+}
+
+@keyframes shakeCell {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-8px);
+    }
+
+    40% {
+        transform: translateX(8px);
+    }
+
+    60% {
+        transform: translateX(-6px);
+    }
+
+    80% {
+        transform: translateX(6px);
+    }
+}
+
+
+/* ================================
+   LÍNEA
+================================ */
+
+.bingo-cell.line-complete {
+    animation:
+        lineCelebrate .8s ease;
+}
+
+@keyframes lineCelebrate {
+
+    0% {
+        transform: scale(1);
+    }
+
+    35% {
+        transform: scale(1.08);
+
+        box-shadow:
+            0 0 35px rgba(255,229,154,.6);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* ================================
+   HINT
+================================ */
+
+.board-hint {
+    margin-top: 18px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: .82rem;
+
+    line-height: 1.6;
+}
+
+.board-hint strong {
+    color: var(--gold);
+}
+
+
+/* ================================
+   REWARD
+================================ */
+
+.reward-teaser {
+    margin-top: 20px;
+
+    padding: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255,158,216,.12);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,158,216,.06),
+            rgba(187,166,255,.06)
+        );
+}
+
+.reward-icon {
+    font-size: 2.3rem;
+}
+
+.reward-teaser strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--pink-light);
+}
+
+.reward-teaser p {
+    color: var(--muted);
+
+    font-size: .85rem;
+}
+
+
+/* ================================
+   TOAST
+================================ */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+    bottom: 25px;
+
+    transform:
+        translate(-50%, 30px)
+        scale(.95);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    width: min(500px, calc(100% - 30px));
+
+    padding: 15px 20px;
+
+    border-radius: 16px;
+
+    background:
+        rgba(23,22,45,.96);
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.35);
+
+    text-align: center;
+
+    z-index: 100;
+
+    transition:
+        opacity .3s ease,
+        transform .3s ease;
+}
+
+.toast.show {
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0)
+        scale(1);
+}
+
+.toast.warning {
+    border-color:
+        rgba(255,229,154,.4);
+
+    box-shadow:
+        0 0 30px rgba(255,229,154,.12);
+}
+
+.toast.success {
+    border-color:
+        rgba(168,245,189,.4);
+}
+
+
+/* ================================
+   MODALES
+================================ */
+
+.overlay {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    place-items: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,.78);
+
+    backdrop-filter:
+        blur(8px);
+
+    z-index: 200;
+}
+
+.overlay.visible {
+    display: grid;
+}
+
+.bingo-modal {
+    position: relative;
+
+    width: min(650px, 100%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    padding: 40px 30px;
+
+    text-align: center;
+
+    border-radius: 28px;
+
+    border:
+        1px solid rgba(255,255,255,.13);
+
+    background:
+        linear-gradient(
+            145deg,
+            #17152d,
+            #211b3d
+        );
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.6);
+
+    animation:
+        modalIn .45s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes modalIn {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(30px)
+            scale(.9);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+.close-button {
+    position: absolute;
+
+    top: 15px;
+    right: 18px;
+
+    width: 35px;
+    height: 35px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.06);
+
+    color: white;
+
+    font-size: 1.5rem;
+
+    cursor: pointer;
+}
+
+.bingo-sparkles {
+    color: var(--gold);
+
+    font-size: 1.5rem;
+
+    letter-spacing: 10px;
+
+    margin-bottom: 5px;
+}
+
+.bingo-pokemon {
+    font-size: 4rem;
+
+    margin-bottom: 5px;
+
+    animation:
+        winnerBounce 1s ease-in-out infinite alternate;
+}
+
+@keyframes winnerBounce {
+
+    from {
+        transform: translateY(0) rotate(-3deg);
+    }
+
+    to {
+        transform: translateY(-8px) rotate(3deg);
+    }
+}
+
+.bingo-modal h2 {
+    font-size: 3.5rem;
+
+    line-height: 1;
+
+    margin-bottom: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gold),
+            var(--pink),
+            var(--purple)
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.bingo-subtitle {
+    color: var(--muted);
+
+    margin-bottom: 25px;
+}
+
+.bingo-message {
+    padding: 20px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,.04);
+
+    border:
+        1px solid rgba(255,158,216,.15);
+
+    margin-bottom: 25px;
+}
+
+.message-title {
+    color: var(--pink-light);
+
+    font-size: 1.05rem;
+
+    font-weight: 900;
+
+    margin-bottom: 15px;
+}
+
+.prize-line {
+    color: var(--muted);
+
+    padding: 4px 0;
+}
+
+.prize-line strong {
+    color: white;
+}
+
+.bingo-message hr {
+    border: none;
+
+    border-top:
+        1px solid rgba(255,255,255,.08);
+
+    margin: 15px 0;
+}
+
+.bingo-message p {
+    color: var(--muted);
+
+    font-size: .9rem;
+
+    line-height: 1.5;
+
+    margin-top: 7px;
+}
+
+.no-bingo-modal h2 {
+    font-size: 2.3rem;
+}
+
+.no-bingo-message {
+    padding: 18px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,.04);
+
+    margin-bottom: 25px;
+
+    color: var(--muted);
+
+    line-height: 1.6;
+}
+
+.no-bingo-message p + p {
+    margin-top: 10px;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 800px) {
+
+    .bingo-board {
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap: 8px;
+    }
+
+    .bingo-cell {
+        min-height: 145px;
+
+        padding: 8px;
+
+        border-radius: 14px;
+    }
+
+    .bingo-cell img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .pokemon-name {
+        font-size: .7rem;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .game-container {
+        width: min(100% - 18px, 520px);
+
+        padding-top: 35px;
+    }
+
+    .hero {
+        margin-bottom: 25px;
+    }
+
+    .hero h1 {
+        font-size: 2.4rem;
+    }
+
+    .draw-panel {
+        padding: 18px 12px;
+    }
+
+    .current-draw {
+        min-height: 220px;
+    }
+
+    .draw-pokemon-image-wrapper {
+        width: 135px;
+        height: 135px;
+    }
+
+    .draw-pokemon-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .draw-pokemon-name {
+        font-size: 1.25rem;
+    }
+
+    .history-panel {
+        padding: 15px;
+    }
+
+    .draw-history {
+        max-height: 150px;
+
+        overflow-y: auto;
+    }
+
+    .history-item {
+        font-size: .7rem;
+
+        padding-right: 8px;
+    }
+
+    .history-item img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .bingo-section {
+        padding: 15px;
+    }
+
+    .card-header {
+        align-items: flex-start;
+    }
+
+    .counter-box {
+        min-width: 75px;
+
+        padding: 8px;
+    }
+
+    .counter-box strong {
+        font-size: 1rem;
+    }
+
+    .counter-box span {
+        font-size: .6rem;
+    }
+
+    .bingo-board {
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap: 6px;
+    }
+
+    .bingo-cell {
+        min-height: 120px;
+
+        padding: 5px;
+
+        border-radius: 12px;
+    }
+
+    .bingo-cell img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .pokemon-name {
+        font-size: .62rem;
+    }
+
+    .stamp::before {
+        width: 42px;
+        height: 42px;
+
+        border-width: 3px;
+
+        font-size: 1.5rem;
+    }
+
+    .reward-teaser {
+        align-items: flex-start;
+    }
+
+    .bingo-modal {
+        padding: 35px 18px 25px;
+    }
+
+    .bingo-modal h2 {
+        font-size: 2.7rem;
+    }
+
+    .no-bingo-modal h2 {
+        font-size: 2rem;
+    }
+}
+
+
+@media (max-width: 390px) {
+
+    .bingo-cell {
+        min-height: 105px;
+    }
+
+    .bingo-cell img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .pokemon-name {
+        font-size: .56rem;
+    }
+}

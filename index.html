@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bingo de la Pikachita ⚡✨</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="stars"></div>
+
+    <main class="game-container">
+
+        <!-- CABECERA -->
+        <header class="hero">
+
+            <div class="eyebrow">
+                ✦ ARCHIVO BINGO DE LA DIOSITA POKÉMON ✦
+            </div>
+
+            <h1>
+                Bingo de la Pikachita
+                <span>⚡✨</span>
+            </h1>
+
+            <p class="subtitle">
+                El gran bingo oficial de la Semilla Estelar 🌱
+            </p>
+
+            <p class="intro">
+                Los Pokémon irán apareciendo uno a uno...
+                <br>
+                ¡Estate atenta porque solo podrás marcar los que hayan salido! 👀
+            </p>
+
+        </header>
+
+
+        <!-- ZONA DEL POKÉMON QUE ESTÁ SALIENDO -->
+        <section class="draw-panel">
+
+            <div class="draw-title">
+                <span>🎱</span>
+                POKÉMON EN JUEGO
+                <span>✨</span>
+            </div>
+
+            <div id="currentDraw" class="current-draw">
+
+                <div class="draw-placeholder">
+                    <div class="placeholder-ball">⚡</div>
+
+                    <strong>
+                        Preparando el bingo...
+                    </strong>
+
+                    <span>
+                        El primer Pokémon está a punto de salir
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="draw-status">
+
+                <div>
+                    <span class="status-label">
+                        Pokémon salidos
+                    </span>
+
+                    <strong id="drawCount">
+                        0 / 24
+                    </strong>
+                </div>
+
+                <div class="draw-progress">
+                    <div id="drawProgressBar"></div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HISTORIAL DE POKÉMON -->
+        <section class="history-panel">
+
+            <div class="history-header">
+
+                <div>
+                    📋 Pokémon que han salido
+                </div>
+
+                <span id="historyCount">
+                    0
+                </span>
+
+            </div>
+
+            <div id="drawHistory" class="draw-history">
+                <div class="history-empty">
+                    Todavía no ha salido ningún Pokémon...
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- CONTROLES -->
+        <section class="controls">
+
+            <button
+                id="newCardButton"
+                class="new-card-button"
+            >
+                🎲 Crear nuevo cartón
+            </button>
+
+        </section>
+
+
+        <!-- CARTÓN -->
+        <section class="bingo-section">
+
+            <div class="card-header">
+
+                <div>
+                    <span class="small-title">
+                        CARTÓN OFICIAL
+                    </span>
+
+                    <h2>
+                        🌱 Bingo de la Semilla Estelar
+                    </h2>
+                </div>
+
+                <div class="counter-box">
+
+                    <strong id="progressText">
+                        0 / 12
+                    </strong>
+
+                    <span>
+                        marcados
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- BARRA DE PROGRESO -->
+            <div class="progress-container">
+
+                <div
+                    id="progressBar"
+                    class="progress-bar"
+                ></div>
+
+            </div>
+
+
+            <!-- CARTÓN -->
+            <div
+                id="bingoBoard"
+                class="bingo-board"
+            ></div>
+
+
+            <div class="board-hint">
+
+                💡
+                Cuando salga un Pokémon que tengas en tu cartón,
+                su casilla brillará.
+                <strong>Entonces podrás marcarlo.</strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- PREMIO -->
+        <section class="reward-teaser">
+
+            <div class="reward-icon">
+                ❤️
+            </div>
+
+            <div>
+
+                <strong>
+                    ¿Y si consigues BINGO?
+                </strong>
+
+                <p>
+                    Hay un premio que solamente puede desbloquear
+                    una persona muy especial...
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- TOAST -->
+        <div
+            id="toast"
+            class="toast"
+        ></div>
+
+
+    </main>
+
+
+    <!-- MODAL BINGO -->
+    <div
+        id="bingoOverlay"
+        class="overlay"
+    >
+
+        <div class="bingo-modal">
+
+            <button
+                id="closeBingo"
+                class="close-button"
+                aria-label="Cerrar"
+            >
+                ×
+            </button>
+
+            <div class="bingo-sparkles">
+                ✨ ⭐ ✨
+            </div>
+
+            <div class="bingo-pokemon">
+                🥳
+            </div>
+
+            <h2>
+                ¡¡¡BINGO!!!
+            </h2>
+
+            <p class="bingo-subtitle">
+                La Semilla Estelar ha completado el cartón.
+            </p>
+
+            <div class="bingo-message">
+
+                <div class="message-title">
+                    ❤️ VALE POR MUCHOS ABRAZOS DEL CHACHI C ❤️
+                </div>
+
+                <div class="prize-line">
+                    Usos:
+                    <strong>♾️ ILIMITADOS</strong>
+                </div>
+
+                <div class="prize-line">
+                    Caducidad:
+                    <strong>Nunca</strong>
+                </div>
+
+                <div class="prize-line">
+                    Disponibilidad:
+                    <strong>Cuando quieras</strong>
+                </div>
+
+                <div class="prize-line">
+                    Condición:
+                    <strong>Venir a por tu abrazo 🥰</strong>
+                </div>
+
+                <div class="prize-line">
+                    Valor:
+                    <strong>incalculable</strong>
+                </div>
+
+                <hr>
+
+                <p>
+                    Este vale no puede perderse,
+                    venderse ni cambiarse por dinero.
+                </p>
+
+                <p>
+                    Pero sí puede canjearse por un abrazo real. 💖
+                </p>
+
+            </div>
+
+            <button
+                id="playAgainButton"
+                class="play-again-button"
+            >
+                🎲 Crear otro cartón
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MODAL SIN BINGO -->
+    <div
+        id="noBingoOverlay"
+        class="overlay"
+    >
+
+        <div class="bingo-modal no-bingo-modal">
+
+            <button
+                id="closeNoBingo"
+                class="close-button"
+                aria-label="Cerrar"
+            >
+                ×
+            </button>
+
+            <div class="bingo-pokemon">
+                😿
+            </div>
+
+            <h2>
+                Se han acabado los Pokémon
+            </h2>
+
+            <p class="bingo-subtitle">
+                Esta vez no hubo BINGO...
+            </p>
+
+            <div class="no-bingo-message">
+
+                <p>
+                    Han salido todos los Pokémon del bombo,
+                    pero el cartón se ha resistido hasta el final. 🥲
+                </p>
+
+                <p>
+                    ¡Siempre puedes intentarlo con un cartón nuevo! ✨
+                </p>
+
+            </div>
+
+            <button
+                id="playAgainNoBingo"
+                class="play-again-button"
+            >
+                🎲 Crear otro cartón
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
