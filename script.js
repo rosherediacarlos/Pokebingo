@@ -1,7 +1,6 @@
 /* ============================================================
    CONFIGURACIÓN
 ============================================================ */
-
 /*
     ⏱️ TIEMPO ENTRE CADA POKÉMON
 
@@ -25,107 +24,132 @@ const DRAW_INTERVAL = 5000;
 const TOTAL_CELLS = 12;
 
 
-/*
-    LISTA DE POKÉMON
-*/
+/* ============================================================
+   LISTA DE POKÉMON
+============================================================ */
 
 const POKEMON = [
+
     {
         nombre: "Bulbasaur",
-        imagen: "pokemon/bulbasaur.jpg"
+        imagen: "pokemon/bulbasaur.png"
     },
+
     {
         nombre: "Charmander",
-        imagen: "pokemon/charmander.jpg"
+        imagen: "pokemon/charmander.png"
     },
+
     {
         nombre: "Clefairy",
         imagen: "pokemon/clefairy.png"
     },
+
     {
         nombre: "Eevee",
         imagen: "pokemon/eevee.png"
     },
+
     {
         nombre: "Gengar",
         imagen: "pokemon/gengar.png"
     },
+
     {
         nombre: "Hawlucha",
         imagen: "pokemon/hawlucha.png"
     },
+
     {
         nombre: "Jigglypuff",
-        imagen: "pokemon/jigglypuff.jpg"
+        imagen: "pokemon/jigglypuff.png"
     },
+
     {
         nombre: "Lapras",
         imagen: "pokemon/lapras.png"
     },
+
     {
         nombre: "Lilligant",
         imagen: "pokemon/lilligant.png"
     },
+
     {
         nombre: "Meloetta",
         imagen: "pokemon/meloetta.png"
     },
+
     {
         nombre: "Mew",
         imagen: "pokemon/mew.png"
     },
+
     {
         nombre: "Milotic",
         imagen: "pokemon/milotic.png"
     },
+
     {
         nombre: "Mimikyu",
-        imagen: "pokemon/mimikyu.jpg"
+        imagen: "pokemon/mimikyu.png"
     },
+
     {
         nombre: "Oricorio",
         imagen: "pokemon/oricorio.png"
     },
+
     {
         nombre: "Pikachu",
         imagen: "pokemon/pikachu.png"
     },
+
     {
         nombre: "Primarina",
         imagen: "pokemon/primarina.png"
     },
+
     {
         nombre: "Raichu de Alola",
         imagen: "pokemon/rauchu_alola.png"
     },
+
     {
         nombre: "Rockruff",
         imagen: "pokemon/rockruff.png"
     },
+
     {
         nombre: "Sprigatito",
         imagen: "pokemon/sprigatito.png"
     },
+
     {
         nombre: "Squirtle",
-        imagen: "pokemon/squirtle.jpg"
+        imagen: "pokemon/squirtle.png"
     },
+
     {
         nombre: "Sylveon",
         imagen: "pokemon/sylveon.png"
     },
+
     {
         nombre: "Togepi",
         imagen: "pokemon/togepi.png"
     },
+
     {
         nombre: "Tsareena",
         imagen: "pokemon/tsareena.png"
     },
+
     {
         nombre: "Vulpix de Alola",
         imagen: "pokemon/vulpix_de_alola.png"
     }
+
 ];
 
 
@@ -137,7 +161,7 @@ let currentCard = [];
 
 let markedCells = new Set();
 
-let drawnPokemon = new Set();
+let drawnPokemon = [];
 
 let drawQueue = [];
 
@@ -151,17 +175,11 @@ let toastTimeout = null;
 
 
 /* ============================================================
-   ELEMENTOS HTML
+   ELEMENTOS DEL DOM
 ============================================================ */
 
 const bingoBoard =
     document.getElementById("bingoBoard");
-
-const progressText =
-    document.getElementById("progressText");
-
-const progressBar =
-    document.getElementById("progressBar");
 
 const currentDraw =
     document.getElementById("currentDraw");
@@ -178,8 +196,11 @@ const drawHistory =
 const historyCount =
     document.getElementById("historyCount");
 
-const newCardButton =
-    document.getElementById("newCardButton");
+const progressText =
+    document.getElementById("progressText");
+
+const progressBar =
+    document.getElementById("progressBar");
 
 const toast =
     document.getElementById("toast");
@@ -190,17 +211,216 @@ const bingoOverlay =
 const noBingoOverlay =
     document.getElementById("noBingoOverlay");
 
-const closeBingo =
-    document.getElementById("closeBingo");
-
-const closeNoBingo =
-    document.getElementById("closeNoBingo");
+const newCardButton =
+    document.getElementById("newCardButton");
 
 const playAgainButton =
     document.getElementById("playAgainButton");
 
 const playAgainNoBingo =
     document.getElementById("playAgainNoBingo");
+
+const closeBingo =
+    document.getElementById("closeBingo");
+
+const closeNoBingo =
+    document.getElementById("closeNoBingo");
+
+
+/* ============================================================
+   MÚSICA
+============================================================ */
+
+const backgroundMusic =
+    document.getElementById("backgroundMusic");
+
+const musicToggle =
+    document.getElementById("musicToggle");
+
+const musicVolume =
+    document.getElementById("musicVolume");
+
+
+backgroundMusic.volume = 0.35;
+
+
+function updateMusicButton() {
+
+    if (backgroundMusic.paused) {
+
+        musicToggle.textContent = "🎵";
+
+        musicToggle.setAttribute(
+            "aria-label",
+            "Reproducir música"
+        );
+
+        musicToggle.title =
+            "Reproducir música";
+
+    } else {
+
+        musicToggle.textContent = "🔊";
+
+        musicToggle.setAttribute(
+            "aria-label",
+            "Pausar música"
+        );
+
+        musicToggle.title =
+            "Pausar música";
+    }
+}
+
+
+musicToggle.addEventListener(
+    "click",
+    async () => {
+
+        try {
+
+            if (backgroundMusic.paused) {
+
+                await backgroundMusic.play();
+
+            } else {
+
+                backgroundMusic.pause();
+
+            }
+
+            updateMusicButton();
+
+        } catch (error) {
+
+            console.warn(
+                "No se pudo reproducir la música:",
+                error
+            );
+
+            showToast(
+                "🎵 Pulsa de nuevo para iniciar la música.",
+                "warning"
+            );
+        }
+
+    }
+);
+
+
+musicVolume.addEventListener(
+    "input",
+    () => {
+
+        backgroundMusic.volume =
+            Number(musicVolume.value);
+
+    }
+);
+
+
+backgroundMusic.addEventListener(
+    "play",
+    updateMusicButton
+);
+
+
+backgroundMusic.addEventListener(
+    "pause",
+    updateMusicButton
+);
+
+
+backgroundMusic.addEventListener(
+    "ended",
+    updateMusicButton
+);
+
+
+updateMusicButton();
+
+
+/* ============================================================
+   SONIDO AL MARCAR
+============================================================ */
+
+const markSound =
+    document.getElementById("markSound");
+
+
+const lineSound =
+    document.getElementById("lineSound");
+
+/*
+ * Volumen independiente del sonido de marcado.
+ * Lo dejamos bajito para que sea sutil.
+ */
+markSound.volume = 0.45;
+
+
+function playLineSound() {
+
+    try {
+
+        lineSound.currentTime = 0;
+
+        const playPromise =
+            lineSound.play();
+
+        if (playPromise !== undefined) {
+
+            playPromise.catch(() => {
+                // El navegador puede bloquear el audio.
+            });
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "No se pudo reproducir el sonido de línea:",
+            error
+        );
+
+    }
+}
+
+
+function playMarkSound() {
+
+    try {
+
+        /*
+         * Reiniciamos el sonido antes de reproducirlo.
+         * Así se puede marcar rápidamente varias casillas
+         * sin que se acumulen reproducciones.
+         */
+
+        markSound.currentTime = 0;
+
+        const playPromise =
+            markSound.play();
+
+        if (playPromise !== undefined) {
+
+            playPromise.catch(() => {
+                /*
+                 * Si el navegador bloquea el sonido,
+                 * simplemente no hacemos nada.
+                 */
+            });
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "No se pudo reproducir el sonido de marcado:",
+            error
+        );
+
+    }
+}
 
 
 /* ============================================================
@@ -209,33 +429,32 @@ const playAgainNoBingo =
 
 function shuffle(array) {
 
-    const copy = [...array];
+    const result =
+        [...array];
 
     for (
-        let i = copy.length - 1;
+        let i = result.length - 1;
         i > 0;
         i--
     ) {
 
         const j =
-            Math.floor(Math.random() * (i + 1));
+            Math.floor(
+                Math.random() * (i + 1)
+            );
 
         [
-            copy[i],
-            copy[j]
+            result[i],
+            result[j]
         ] = [
-            copy[j],
-            copy[i]
+            result[j],
+            result[i]
         ];
     }
 
-    return copy;
+    return result;
 }
 
-
-/*
-    Busca un Pokémon por su nombre.
-*/
 
 function getPokemonByName(nombre) {
 
@@ -247,58 +466,39 @@ function getPokemonByName(nombre) {
 
 
 /* ============================================================
-   CREAR CARTÓN
+   CREAR NUEVO CARTÓN
 ============================================================ */
 
 function createNewCard() {
 
     stopDrawTimer();
 
-    gameFinished = false;
-
-    lineAlreadyWon = false;
-
-    markedCells.clear();
-
-    drawnPokemon.clear();
-
-    /*
-        Seleccionamos 12 Pokémon diferentes
-        de los 24 disponibles.
-    */
-
     currentCard =
         shuffle(POKEMON)
             .slice(0, TOTAL_CELLS);
 
+    markedCells =
+        new Set();
 
-    /*
-        Creamos el bombo de Pokémon.
-
-        Como hacemos shuffle una sola vez,
-        cada Pokémon saldrá una única vez.
-    */
+    drawnPokemon =
+        [];
 
     drawQueue =
         shuffle(POKEMON);
 
+    lineAlreadyWon =
+        false;
 
-    renderBoard();
+    gameFinished =
+        false;
 
     resetDrawInterface();
 
+    renderBoard();
+
     updateProgress();
 
-    /*
-        El primer Pokémon sale inmediatamente.
-    */
-
     drawNextPokemon();
-
-
-    /*
-        Después seguimos sacando uno cada X segundos.
-    */
 
     drawTimer =
         setInterval(
@@ -309,7 +509,7 @@ function createNewCard() {
 
 
 /* ============================================================
-   RENDER CARTÓN
+   RENDERIZAR CARTÓN
 ============================================================ */
 
 function renderBoard() {
@@ -320,13 +520,19 @@ function renderBoard() {
         (pokemon, index) => {
 
             const cell =
-                document.createElement("div");
+                document.createElement("button");
+
+            cell.type = "button";
 
             cell.className =
                 "bingo-cell";
 
             cell.dataset.index =
                 index;
+
+            cell.dataset.name =
+                pokemon.nombre;
+
 
             const image =
                 document.createElement("img");
@@ -337,23 +543,28 @@ function renderBoard() {
             image.alt =
                 pokemon.nombre;
 
-            /*
-                Si falta una imagen,
-                mostramos un ? en lugar
-                de romper el cartón.
-            */
+            image.loading =
+                "lazy";
 
-            image.onerror = function () {
 
-                this.onerror = null;
+            image.addEventListener(
+                "error",
+                () => {
 
-                this.src =
-                    createFallbackImage();
-            };
+                    createFallbackImage(
+                        image,
+                        pokemon.nombre
+                    );
+
+                },
+                {
+                    once: true
+                }
+            );
 
 
             const name =
-                document.createElement("div");
+                document.createElement("span");
 
             name.className =
                 "pokemon-name";
@@ -362,54 +573,79 @@ function renderBoard() {
                 pokemon.nombre;
 
 
+            const stamp =
+                document.createElement("div");
+
+            stamp.className =
+                "cell-stamp";
+
+            stamp.innerHTML =
+                "✓";
+
+
             cell.appendChild(image);
 
             cell.appendChild(name);
 
+            cell.appendChild(stamp);
+
 
             cell.addEventListener(
                 "click",
-                () => toggleCell(index, cell)
+                () => {
+
+                    toggleCell(
+                        index
+                    );
+
+                }
             );
 
 
             bingoBoard.appendChild(cell);
+
         }
     );
+
 }
 
 
 /* ============================================================
-   IMAGEN FALLBACK
+   FALLBACK PARA IMÁGENES
 ============================================================ */
 
-function createFallbackImage() {
+function createFallbackImage(
+    image,
+    pokemonName
+) {
 
-    return "data:image/svg+xml;charset=UTF-8," +
-        encodeURIComponent(`
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="200"
-                 height="200"
-                 viewBox="0 0 200 200">
+    image.removeAttribute("src");
 
-                <rect
-                    width="200"
-                    height="200"
-                    rx="30"
-                    fill="#17152d"
-                />
+    image.alt =
+        pokemonName;
 
-                <text
-                    x="100"
-                    y="120"
-                    text-anchor="middle"
-                    font-size="80"
-                    fill="white">
-                    ?
-                </text>
+    image.classList.add(
+        "image-error"
+    );
 
-            </svg>
-        `);
+    image.style.display =
+        "none";
+
+
+    const fallback =
+        document.createElement("div");
+
+    fallback.className =
+        "image-fallback";
+
+    fallback.textContent =
+        "?";
+
+
+    image.parentElement.insertBefore(
+        fallback,
+        image
+    );
 }
 
 
@@ -419,297 +655,211 @@ function createFallbackImage() {
 
 function drawNextPokemon() {
 
-    if (gameFinished) {
+    if (
+        gameFinished ||
+        drawQueue.length === 0
+    ) {
+
+        stopDrawTimer();
+
+        if (
+            !gameFinished &&
+            drawQueue.length === 0
+        ) {
+
+            finishWithoutBingo();
+
+        }
+
         return;
     }
 
-
-    /*
-        Si no quedan Pokémon en el bombo,
-        termina la partida.
-    */
-
-    if (drawQueue.length === 0) {
-
-        finishWithoutBingo();
-
-        return;
-    }
-
-
-    /*
-        Sacamos el siguiente.
-    */
 
     const pokemon =
         drawQueue.shift();
 
 
-    /*
-        Guardamos que ya ha salido.
-    */
-
-    drawnPokemon.add(
-        pokemon.nombre
+    drawnPokemon.push(
+        pokemon
     );
 
-
-    /*
-        Mostramos el Pokémon.
-    */
 
     renderCurrentDraw(
         pokemon
     );
 
-
-    /*
-        Actualizamos historial.
-    */
-
     renderDrawHistory();
-
-
-    /*
-        Actualizamos contador.
-    */
 
     updateDrawProgress();
 
-
-    /*
-        Si está en el cartón,
-        hacemos que brille.
-    */
-
     highlightAvailableCell(
-        pokemon
+        pokemon.nombre
     );
 
 
     /*
-        Si está en el cartón,
-        damos una pequeña pista.
-    */
-
-    const isOnCard =
-        currentCard.some(
-            cardPokemon =>
-                cardPokemon.nombre ===
-                pokemon.nombre
-        );
-
-    if (isOnCard) {
-
-        showToast(
-            `✨ ¡Ha salido ${pokemon.nombre}! Lo tienes en tu cartón.`,
-            "success"
-        );
-    }
-
-
-    /*
-        Si este era el último Pokémon
-        y no ha habido BINGO,
-        terminamos la partida.
-    */
+     * Si todos los Pokémon han salido
+     * y todavía no hay BINGO.
+     */
 
     if (
         drawQueue.length === 0 &&
-        markedCells.size < TOTAL_CELLS
+        !gameFinished
     ) {
 
         setTimeout(
-            finishWithoutBingo,
-            1000
+            () => {
+
+                if (!gameFinished) {
+                    finishWithoutBingo();
+                }
+
+            },
+            1200
         );
+
     }
 }
 
 
 /* ============================================================
-   MOSTRAR POKÉMON ACTUAL
+   POKÉMON ACTUAL
 ============================================================ */
 
-function renderCurrentDraw(pokemon) {
+function renderCurrentDraw(
+    pokemon
+) {
 
-    currentDraw.innerHTML = "";
+    currentDraw.innerHTML = `
 
+        <div class="draw-pokemon">
 
-    const wrapper =
-        document.createElement("div");
+            <div class="draw-pokemon-image-wrapper">
 
-    wrapper.className =
-        "draw-pokemon";
+                <img
+                    class="draw-pokemon-image"
+                    src="${pokemon.imagen}"
+                    alt="${pokemon.nombre}"
+                >
 
+            </div>
 
-    const imageWrapper =
-        document.createElement("div");
+            <div class="draw-pokemon-info">
 
-    imageWrapper.className =
-        "draw-pokemon-image-wrapper";
+                <span>
+                    ¡HA SALIDO!
+                </span>
+
+                <strong>
+                    ${pokemon.nombre}
+                </strong>
+
+            </div>
+
+        </div>
+
+    `;
 
 
     const image =
-        document.createElement("img");
-
-    image.className =
-        "draw-pokemon-image";
-
-    image.src =
-        pokemon.imagen;
-
-    image.alt =
-        pokemon.nombre;
-
-    image.onerror = function () {
-
-        this.onerror = null;
-
-        this.src =
-            createFallbackImage();
-    };
+        currentDraw.querySelector(
+            ".draw-pokemon-image"
+        );
 
 
-    const name =
-        document.createElement("div");
+    if (image) {
 
-    name.className =
-        "draw-pokemon-name";
+        image.addEventListener(
+            "error",
+            () => {
 
-    name.textContent =
-        pokemon.nombre;
+                image.style.display =
+                    "none";
 
+            },
+            {
+                once: true
+            }
+        );
 
-    const status =
-        document.createElement("div");
-
-    status.className =
-        "draw-pokemon-status";
-
-    status.textContent =
-        "✨ ¡HA SALIDO! ✨";
-
-
-    imageWrapper.appendChild(
-        image
-    );
-
-    wrapper.appendChild(
-        imageWrapper
-    );
-
-    wrapper.appendChild(
-        name
-    );
-
-    wrapper.appendChild(
-        status
-    );
-
-    currentDraw.appendChild(
-        wrapper
-    );
+    }
 }
 
 
 /* ============================================================
-   HISTORIAL DE POKÉMON
+   HISTORIAL
 ============================================================ */
 
 function renderDrawHistory() {
 
-    drawHistory.innerHTML = "";
+    historyCount.textContent =
+        drawnPokemon.length;
 
 
-    /*
-        Convertimos el Set en array
-        y mostramos el más reciente primero.
-    */
-
-    const history =
-        [...drawnPokemon].reverse();
-
-
-    if (history.length === 0) {
+    if (
+        drawnPokemon.length === 0
+    ) {
 
         drawHistory.innerHTML = `
+
             <div class="history-empty">
                 Todavía no ha salido ningún Pokémon...
             </div>
+
         `;
 
         return;
     }
 
 
-    history.forEach(
-        (nombre, index) => {
-
-            const pokemon =
-                getPokemonByName(nombre);
-
-            if (!pokemon) {
-                return;
-            }
+    drawHistory.innerHTML = "";
 
 
-            const item =
-                document.createElement("div");
+    drawnPokemon
+        .slice()
+        .reverse()
+        .forEach(
+            pokemon => {
 
-            item.className =
-                "history-item";
+                const item =
+                    document.createElement("div");
+
+                item.className =
+                    "history-item";
 
 
-            /*
-                El primero del historial
-                es el último Pokémon salido.
-            */
+                const image =
+                    document.createElement("img");
 
-            if (index === 0) {
+                image.src =
+                    pokemon.imagen;
 
-                item.classList.add(
-                    "current"
+                image.alt =
+                    pokemon.nombre;
+
+
+                const name =
+                    document.createElement("span");
+
+                name.textContent =
+                    pokemon.nombre;
+
+
+                item.appendChild(
+                    image
                 );
+
+                item.appendChild(
+                    name
+                );
+
+
+                drawHistory.appendChild(
+                    item
+                );
+
             }
-
-
-            const image =
-                document.createElement("img");
-
-            image.src =
-                pokemon.imagen;
-
-            image.alt =
-                pokemon.nombre;
-
-            image.onerror = function () {
-
-                this.onerror = null;
-
-                this.src =
-                    createFallbackImage();
-            };
-
-
-            const name =
-                document.createElement("span");
-
-            name.textContent =
-                pokemon.nombre;
-
-
-            item.appendChild(image);
-
-            item.appendChild(name);
-
-            drawHistory.appendChild(item);
-        }
-    );
-
-
-    historyCount.textContent =
-        drawnPokemon.size;
+        );
 }
 
 
@@ -719,19 +869,19 @@ function renderDrawHistory() {
 
 function updateDrawProgress() {
 
-    const total =
-        POKEMON.length;
-
-    const current =
-        drawnPokemon.size;
+    const count =
+        drawnPokemon.length;
 
 
     drawCount.textContent =
-        `${current} / ${total}`;
+        `${count} / ${POKEMON.length}`;
 
 
     const percentage =
-        (current / total) * 100;
+        (
+            count /
+            POKEMON.length
+        ) * 100;
 
 
     drawProgressBar.style.width =
@@ -740,45 +890,33 @@ function updateDrawProgress() {
 
 
 /* ============================================================
-   RESALTAR POKÉMON DISPONIBLE
+   ILUMINAR POKÉMON DISPONIBLES
 ============================================================ */
 
-function highlightAvailableCell(pokemon) {
+function highlightAvailableCell(
+    pokemonName
+) {
 
-    currentCard.forEach(
-        (cardPokemon, index) => {
+    const cells =
+        bingoBoard.querySelectorAll(
+            ".bingo-cell"
+        );
+
+
+    cells.forEach(
+        cell => {
 
             if (
-                cardPokemon.nombre !==
-                pokemon.nombre
+                cell.dataset.name ===
+                pokemonName
             ) {
-                return;
-            }
 
-
-            const cell =
-                bingoBoard.querySelector(
-                    `[data-index="${index}"]`
+                cell.classList.add(
+                    "available"
                 );
 
-
-            if (!cell) {
-                return;
             }
 
-
-            cell.classList.add(
-                "available"
-            );
-
-
-            /*
-                La clase se queda puesta mientras
-                el Pokémon siga sin marcarse.
-
-                Así la jugadora sabe cuáles
-                puede marcar.
-            */
         }
     );
 }
@@ -788,7 +926,7 @@ function highlightAvailableCell(pokemon) {
    MARCAR / DESMARCAR CASILLA
 ============================================================ */
 
-function toggleCell(index, cell) {
+function toggleCell(index) {
 
     if (gameFinished) {
         return;
@@ -799,14 +937,22 @@ function toggleCell(index, cell) {
         currentCard[index];
 
 
+    const cell =
+        bingoBoard.querySelector(
+            `[data-index="${index}"]`
+        );
+
+
     /*
-        COMPROBAMOS SI EL POKÉMON
-        YA HA SALIDO.
-    */
+     * Si todavía no ha salido,
+     * no permitimos marcarlo.
+     */
 
     if (
-        !drawnPokemon.has(
-            pokemon.nombre
+        !drawnPokemon.some(
+            item =>
+                item.nombre ===
+                pokemon.nombre
         )
     ) {
 
@@ -815,8 +961,9 @@ function toggleCell(index, cell) {
         );
 
         /*
-            Forzamos reinicio de animación.
-        */
+         * Forzamos reinicio de la animación
+         * para que vuelva a vibrar cada vez.
+         */
 
         void cell.offsetWidth;
 
@@ -826,8 +973,20 @@ function toggleCell(index, cell) {
 
 
         showToast(
-            `⏳ ${pokemon.nombre} todavía no ha salido. ¡Espera a que aparezca!`,
+            "⏳ Este Pokémon todavía no ha salido.",
             "warning"
+        );
+
+
+        setTimeout(
+            () => {
+
+                cell.classList.remove(
+                    "not-available"
+                );
+
+            },
+            500
         );
 
 
@@ -836,106 +995,118 @@ function toggleCell(index, cell) {
 
 
     /*
-        SI YA ESTÁ MARCADO,
-        LO DESMARCAMOS.
-    */
+     * Si ya estaba marcado,
+     * permitimos desmarcarlo.
+     */
 
     if (
         markedCells.has(index)
     ) {
 
-        markedCells.delete(index);
+        markedCells.delete(
+            index
+        );
 
         cell.classList.remove(
             "marked"
         );
 
-
         const stamp =
-            cell.querySelector(".stamp");
+            cell.querySelector(
+                ".cell-stamp"
+            );
 
         if (stamp) {
-            stamp.remove();
+
+            stamp.classList.remove(
+                "show"
+            );
+
         }
+
+        updateProgress();
 
         return;
     }
 
 
     /*
-        MARCAMOS.
-    */
+     * MARCAR CASILLA
+     */
 
-    markedCells.add(index);
+    markedCells.add(
+        index
+    );
+
 
     cell.classList.add(
         "marked"
     );
 
 
-    /*
-        Quitamos el brillo de
-        "disponible".
-    */
-
-    cell.classList.remove(
-        "available"
-    );
-
-
-    /*
-        Creamos el sello.
-    */
-
     const stamp =
-        document.createElement("div");
+        cell.querySelector(
+            ".cell-stamp"
+        );
 
-    stamp.className =
-        "stamp";
 
-    cell.appendChild(
-        stamp
-    );
+    if (stamp) {
+
+        stamp.classList.add(
+            "show"
+        );
+
+    }
 
 
     /*
-        Actualizamos progreso.
-    */
+     * 🔊 Sonido sutil de marcado.
+     */
+
+    playMarkSound();
+
+
+    /*
+     * Actualizamos el contador.
+     */
 
     updateProgress();
 
 
     /*
-        Comprobamos si hay línea.
-    */
+     * Comprobamos línea.
+     */
 
     checkForLine();
 
 
     /*
-        Comprobamos BINGO.
-    */
+     * Comprobamos BINGO.
+     */
 
     checkForBingo();
 }
 
 
 /* ============================================================
-   PROGRESO DEL CARTÓN
+   ACTUALIZAR PROGRESO DEL CARTÓN
 ============================================================ */
 
 function updateProgress() {
 
-    const marked =
+    const count =
         markedCells.size;
 
 
     progressText.textContent =
-        `${marked} / ${TOTAL_CELLS}`;
+        `${count} / ${TOTAL_CELLS}`;
 
 
     const percentage =
-        (marked / TOTAL_CELLS) * 100;
+        (
+            count /
+            TOTAL_CELLS
+        ) * 100;
 
 
     progressBar.style.width =
@@ -944,7 +1115,7 @@ function updateProgress() {
 
 
 /* ============================================================
-   COMPROBAR LÍNEAS
+   COMPROBAR LÍNEA
 ============================================================ */
 
 function checkForLine() {
@@ -954,85 +1125,72 @@ function checkForLine() {
     }
 
 
-    /*
-        Nuestro cartón tiene:
-
-        4 columnas
-        3 filas
-        12 casillas
-    */
-
-
     const rows = [
+
         [0, 1, 2, 3],
+
         [4, 5, 6, 7],
+
         [8, 9, 10, 11]
+
     ];
 
 
-    for (const row of rows) {
-
-        const completed =
-            row.every(
-                index =>
-                    markedCells.has(index)
-            );
-
-
-        if (completed) {
-
-            lineAlreadyWon = true;
+    const completedRow =
+        rows.some(
+            row =>
+                row.every(
+                    index =>
+                        markedCells.has(index)
+                )
+        );
 
 
-            celebrateLine(
-                row
-            );
-
-
-            showToast(
-                "🎉 ¡Has conseguido tu primera Línea, ya estás más cerca de completarlo!",
-                "success"
-            );
-
-
-            break;
-        }
+    if (!completedRow) {
+        return;
     }
+
+
+    lineAlreadyWon =
+        true;
+
+
+    celebrateLine();
 }
 
 
 /* ============================================================
-   CELEBRACIÓN DE LÍNEA
+   CELEBRAR LÍNEA
 ============================================================ */
 
-function celebrateLine(row) {
+function celebrateLine() {
 
-    row.forEach(
-        index => {
+    playLineSound();
 
-            const cell =
-                bingoBoard.querySelector(
-                    `[data-index="${index}"]`
-                );
-
-
-            if (!cell) {
-                return;
-            }
+    showToast(
+        "Has conseguido tu primera Línea, ya estás más cerca de completarlo",
+        "success"
+    );
 
 
-            cell.classList.remove(
+    /*
+     * Pequeño efecto visual en el cartón.
+     */
+
+    bingoBoard.classList.add(
+        "line-complete"
+    );
+
+
+    setTimeout(
+        () => {
+
+            bingoBoard.classList.remove(
                 "line-complete"
             );
 
-
-            void cell.offsetWidth;
-
-
-            cell.classList.add(
-                "line-complete"
-            );
-        }
+        },
+        900
     );
 }
 
@@ -1047,17 +1205,29 @@ function checkForBingo() {
         markedCells.size !==
         TOTAL_CELLS
     ) {
+
         return;
     }
 
 
-    gameFinished = true;
+    if (gameFinished) {
+        return;
+    }
+
+
+    gameFinished =
+        true;
+
 
     stopDrawTimer();
 
 
     setTimeout(
-        showBingo,
+        () => {
+
+            showBingo();
+
+        },
         400
     );
 }
@@ -1069,10 +1239,12 @@ function checkForBingo() {
 
 function showBingo() {
 
-    bingoOverlay.classList.add(
-        "visible"
-    );
+    // 🔊 Reproducir el mismo sonido de la línea
+    playLineSound();
 
+    bingoOverlay.classList.add(
+        "show"
+    );
 
     createConfetti();
 }
@@ -1084,51 +1256,49 @@ function showBingo() {
 
 function createConfetti() {
 
-    const amount = 55;
+    const symbols = [
+        "✨",
+        "⭐",
+        "💖",
+        "🌱",
+        "⚡",
+        "🎉",
+        "🥳"
+    ];
 
 
-    for (let i = 0; i < amount; i++) {
+    for (
+        let i = 0;
+        i < 55;
+        i++
+    ) {
 
         const confetti =
             document.createElement("div");
 
+        confetti.className =
+            "confetti";
 
-        confetti.style.position =
-            "fixed";
+
+        confetti.textContent =
+            symbols[
+                Math.floor(
+                    Math.random() *
+                    symbols.length
+                )
+            ];
+
 
         confetti.style.left =
             `${Math.random() * 100}%`;
 
-        confetti.style.top =
-            "-20px";
 
-        confetti.style.width =
-            "8px";
+        confetti.style.animationDelay =
+            `${Math.random() * 1.5}s`;
 
-        confetti.style.height =
-            "14px";
 
-        confetti.style.borderRadius =
-            "2px";
-
-        confetti.style.background =
-            [
-                "#ff9ed8",
-                "#bba6ff",
-                "#ffe59a",
-                "#8de9ff",
-                "#a8f5bd"
-            ][
-                Math.floor(
-                    Math.random() * 5
-                )
-            ];
-
-        confetti.style.zIndex =
-            "300";
-
-        confetti.style.pointerEvents =
-            "none";
+        confetti.style.animationDuration =
+            `${2 + Math.random() * 2}s`;
 
 
         document.body.appendChild(
@@ -1136,51 +1306,20 @@ function createConfetti() {
         );
 
 
-        const duration =
-            1800 +
-            Math.random() * 2200;
-
-
-        const rotation =
-            Math.random() * 720 -
-            360;
-
-
-        const x =
-            (Math.random() - .5) *
-            300;
-
-
-        confetti.animate(
-            [
-                {
-                    transform:
-                        "translate(0, 0) rotate(0)",
-                    opacity: 1
-                },
-                {
-                    transform:
-                        `translate(${x}px, 110vh) rotate(${rotation}deg)`,
-                    opacity: 0
-                }
-            ],
-            {
-                duration,
-                easing: "cubic-bezier(.2,.7,.3,1)"
-            }
-        );
-
-
         setTimeout(
-            () => confetti.remove(),
-            duration
+            () => {
+
+                confetti.remove();
+
+            },
+            4500
         );
     }
 }
 
 
 /* ============================================================
-   FIN SIN BINGO
+   FINAL SIN BINGO
 ============================================================ */
 
 function finishWithoutBingo() {
@@ -1190,31 +1329,27 @@ function finishWithoutBingo() {
     }
 
 
-    gameFinished = true;
+    gameFinished =
+        true;
+
 
     stopDrawTimer();
 
 
-    setTimeout(
-        () => {
-
-            noBingoOverlay.classList.add(
-                "visible"
-            );
-
-        },
-        300
+    noBingoOverlay.classList.add(
+        "show"
     );
 }
 
 
 /* ============================================================
-   RESET INTERFAZ DE SORTEO
+   REINICIAR INTERFAZ DEL BOMBO
 ============================================================ */
 
 function resetDrawInterface() {
 
     currentDraw.innerHTML = `
+
         <div class="draw-placeholder">
 
             <div class="placeholder-ball">
@@ -1230,31 +1365,34 @@ function resetDrawInterface() {
             </span>
 
         </div>
+
     `;
 
 
     drawCount.textContent =
-        `0 / ${POKEMON.length}`;
+        "0 / 24";
 
 
     drawProgressBar.style.width =
         "0%";
 
 
+    historyCount.textContent =
+        "0";
+
+
     drawHistory.innerHTML = `
+
         <div class="history-empty">
             Todavía no ha salido ningún Pokémon...
         </div>
+
     `;
-
-
-    historyCount.textContent =
-        "0";
 }
 
 
 /* ============================================================
-   PARAR TEMPORIZADOR
+   DETENER TEMPORIZADOR
 ============================================================ */
 
 function stopDrawTimer() {
@@ -1265,7 +1403,8 @@ function stopDrawTimer() {
             drawTimer
         );
 
-        drawTimer = null;
+        drawTimer =
+            null;
     }
 }
 
@@ -1289,7 +1428,7 @@ function showToast(
 
 
     toast.className =
-        "toast show";
+        "toast";
 
 
     if (type) {
@@ -1297,7 +1436,13 @@ function showToast(
         toast.classList.add(
             type
         );
+
     }
+
+
+    toast.classList.add(
+        "show"
+    );
 
 
     toastTimeout =
@@ -1309,7 +1454,7 @@ function showToast(
                 );
 
             },
-            3200
+            3000
         );
 }
 
@@ -1323,19 +1468,15 @@ newCardButton.addEventListener(
     () => {
 
         bingoOverlay.classList.remove(
-            "visible"
+            "show"
         );
 
         noBingoOverlay.classList.remove(
-            "visible"
+            "show"
         );
 
         createNewCard();
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
     }
 );
 
@@ -1345,15 +1486,11 @@ playAgainButton.addEventListener(
     () => {
 
         bingoOverlay.classList.remove(
-            "visible"
+            "show"
         );
 
         createNewCard();
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
     }
 );
 
@@ -1363,35 +1500,23 @@ playAgainNoBingo.addEventListener(
     () => {
 
         noBingoOverlay.classList.remove(
-            "visible"
+            "show"
         );
 
         createNewCard();
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
     }
 );
 
-
-/*
-    Los botones X simplemente cierran
-    la ventana.
-
-    La partida sigue terminada,
-    por lo que para empezar otra hay
-    que crear otro cartón.
-*/
 
 closeBingo.addEventListener(
     "click",
     () => {
 
         bingoOverlay.classList.remove(
-            "visible"
+            "show"
         );
+
     }
 );
 
@@ -1401,14 +1526,15 @@ closeNoBingo.addEventListener(
     () => {
 
         noBingoOverlay.classList.remove(
-            "visible"
+            "show"
         );
+
     }
 );
 
 
 /* ============================================================
-   INICIAR JUEGO
+   INICIAR BINGO
 ============================================================ */
 
 createNewCard();

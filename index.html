@@ -102,9 +102,11 @@
             </div>
 
             <div id="drawHistory" class="draw-history">
+
                 <div class="history-empty">
                     Todavía no ha salido ningún Pokémon...
                 </div>
+
             </div>
 
         </section>
@@ -129,6 +131,7 @@
             <div class="card-header">
 
                 <div>
+
                     <span class="small-title">
                         CARTÓN OFICIAL
                     </span>
@@ -136,6 +139,7 @@
                     <h2>
                         🌱 Bingo de la Semilla Estelar
                     </h2>
+
                 </div>
 
                 <div class="counter-box">
@@ -216,7 +220,10 @@
     </main>
 
 
-    <!-- MODAL BINGO -->
+    <!-- =========================================================
+         MODAL BINGO
+    ========================================================== -->
+
     <div
         id="bingoOverlay"
         class="overlay"
@@ -304,7 +311,10 @@
     </div>
 
 
-    <!-- MODAL SIN BINGO -->
+    <!-- =========================================================
+         MODAL SIN BINGO
+    ========================================================== -->
+
     <div
         id="noBingoOverlay"
         class="overlay"
@@ -351,6 +361,89 @@
             >
                 🎲 Crear otro cartón
             </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         MÚSICA DE FONDO
+    ========================================================== -->
+
+    <audio
+        id="backgroundMusic"
+        loop
+        preload="auto"
+    >
+        <source
+            src="music/relax_in_alola.mp3"
+            type="audio/mpeg"
+        >
+    </audio>
+
+
+    <!-- =========================================================
+         SONIDO AL MARCAR UNA CASILLA
+    ========================================================== -->
+
+    <audio
+        id="markSound"
+        preload="auto"
+    >
+        <source
+            src="music/pop_notification.mp3"
+            type="audio/mpeg"
+        >
+    </audio>
+
+    <!-- =========================================================
+         SONIDO AL completar linea
+    ========================================================== -->
+    <audio
+    id="lineSound"
+    preload="auto"
+    >
+        <source
+            src="music/linea_bingo.mp3"
+            type="audio/mpeg"
+        >
+    </audio>
+
+
+    <!-- =========================================================
+         CONTROL DE MÚSICA
+    ========================================================== -->
+
+    <div
+        id="musicControl"
+        class="music-control"
+    >
+
+        <button
+            id="musicToggle"
+            class="music-toggle"
+            type="button"
+            aria-label="Reproducir música"
+        >
+            🎵
+        </button>
+
+        <div class="music-volume-wrapper">
+
+            <span>
+                🔊
+            </span>
+
+            <input
+                id="musicVolume"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.35"
+                aria-label="Volumen de la música"
+            >
 
         </div>
 
