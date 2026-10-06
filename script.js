@@ -14,7 +14,7 @@
     Puedes cambiar SOLO este número.
 */
 
-const DRAW_INTERVAL = 1000;
+const DRAW_INTERVAL = 5000;
 
 
 /*
