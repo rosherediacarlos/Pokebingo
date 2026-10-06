@@ -14,7 +14,22 @@
     Puedes cambiar SOLO este número.
 */
 
-const DRAW_INTERVAL = 5000;
+const DRAW_INTERVAL = 1000;
+
+
+/*
+    ⏳ TIEMPO EXTRA DESPUÉS DEL ÚLTIMO POKÉMON
+
+    Cuando sale el Pokémon número 24,
+    dejamos unos segundos para poder marcarlo
+    antes de mostrar que no hubo BINGO.
+
+    3000 = 3 segundos
+    5000 = 5 segundos
+    8000 = 8 segundos
+*/
+
+const FINAL_DRAW_GRACE_PERIOD = 5000;
 
 
 /*
@@ -166,6 +181,8 @@ let drawnPokemon = [];
 let drawQueue = [];
 
 let drawTimer = null;
+
+let finalDrawTimeout = null;
 
 let lineAlreadyWon = false;
 
@@ -341,7 +358,7 @@ updateMusicButton();
 
 
 /* ============================================================
-   SONIDO AL MARCAR
+   SONIDOS
 ============================================================ */
 
 const markSound =
@@ -351,10 +368,12 @@ const markSound =
 const lineSound =
     document.getElementById("lineSound");
 
+
 /*
  * Volumen independiente del sonido de marcado.
  * Lo dejamos bajito para que sea sutil.
  */
+
 markSound.volume = 0.45;
 
 
@@ -473,24 +492,33 @@ function createNewCard() {
 
     stopDrawTimer();
 
+    clearFinalDrawTimeout();
+
+
     currentCard =
         shuffle(POKEMON)
             .slice(0, TOTAL_CELLS);
 
+
     markedCells =
         new Set();
+
 
     drawnPokemon =
         [];
 
+
     drawQueue =
         shuffle(POKEMON);
+
 
     lineAlreadyWon =
         false;
 
+
     gameFinished =
         false;
+
 
     resetDrawInterface();
 
@@ -499,6 +527,7 @@ function createNewCard() {
     updateProgress();
 
     drawNextPokemon();
+
 
     drawTimer =
         setInterval(
@@ -516,19 +545,24 @@ function renderBoard() {
 
     bingoBoard.innerHTML = "";
 
+
     currentCard.forEach(
         (pokemon, index) => {
 
             const cell =
                 document.createElement("button");
 
+
             cell.type = "button";
+
 
             cell.className =
                 "bingo-cell";
 
+
             cell.dataset.index =
                 index;
+
 
             cell.dataset.name =
                 pokemon.nombre;
@@ -537,11 +571,14 @@ function renderBoard() {
             const image =
                 document.createElement("img");
 
+
             image.src =
                 pokemon.imagen;
 
+
             image.alt =
                 pokemon.nombre;
+
 
             image.loading =
                 "lazy";
@@ -566,8 +603,10 @@ function renderBoard() {
             const name =
                 document.createElement("span");
 
+
             name.className =
                 "pokemon-name";
+
 
             name.textContent =
                 pokemon.nombre;
@@ -576,8 +615,10 @@ function renderBoard() {
             const stamp =
                 document.createElement("div");
 
+
             stamp.className =
                 "cell-stamp";
+
 
             stamp.innerHTML =
                 "✓";
@@ -621,12 +662,15 @@ function createFallbackImage(
 
     image.removeAttribute("src");
 
+
     image.alt =
         pokemonName;
+
 
     image.classList.add(
         "image-error"
     );
+
 
     image.style.display =
         "none";
@@ -635,8 +679,10 @@ function createFallbackImage(
     const fallback =
         document.createElement("div");
 
+
     fallback.className =
         "image-fallback";
+
 
     fallback.textContent =
         "?";
@@ -655,21 +701,25 @@ function createFallbackImage(
 
 function drawNextPokemon() {
 
-    if (
-        gameFinished ||
-        drawQueue.length === 0
-    ) {
+    if (gameFinished) {
 
         stopDrawTimer();
 
-        if (
-            !gameFinished &&
-            drawQueue.length === 0
-        ) {
+        return;
+    }
 
-            finishWithoutBingo();
 
-        }
+    /*
+     * Si ya no quedan Pokémon en la cola,
+     * no hacemos nada.
+     *
+     * El resultado final se controla mediante
+     * el temporizador especial del último Pokémon.
+     */
+
+    if (drawQueue.length === 0) {
+
+        stopDrawTimer();
 
         return;
     }
@@ -688,9 +738,12 @@ function drawNextPokemon() {
         pokemon
     );
 
+
     renderDrawHistory();
 
+
     updateDrawProgress();
+
 
     highlightAvailableCell(
         pokemon.nombre
@@ -698,8 +751,11 @@ function drawNextPokemon() {
 
 
     /*
-     * Si todos los Pokémon han salido
-     * y todavía no hay BINGO.
+     * Si este era el último Pokémon del bombo,
+     * NO mostramos inmediatamente que se ha perdido.
+     *
+     * Dejamos un pequeño margen de tiempo para que
+     * pueda marcarlo y conseguir el BINGO.
      */
 
     if (
@@ -707,16 +763,29 @@ function drawNextPokemon() {
         !gameFinished
     ) {
 
-        setTimeout(
-            () => {
+        stopDrawTimer();
 
-                if (!gameFinished) {
-                    finishWithoutBingo();
-                }
 
-            },
-            1200
-        );
+        clearFinalDrawTimeout();
+
+
+        finalDrawTimeout =
+            setTimeout(
+                () => {
+
+                    finalDrawTimeout =
+                        null;
+
+
+                    if (!gameFinished) {
+
+                        finishWithoutBingo();
+
+                    }
+
+                },
+                FINAL_DRAW_GRACE_PERIOD
+            );
 
     }
 }
@@ -824,6 +893,7 @@ function renderDrawHistory() {
                 const item =
                     document.createElement("div");
 
+
                 item.className =
                     "history-item";
 
@@ -831,8 +901,10 @@ function renderDrawHistory() {
                 const image =
                     document.createElement("img");
 
+
                 image.src =
                     pokemon.imagen;
+
 
                 image.alt =
                     pokemon.nombre;
@@ -841,6 +913,7 @@ function renderDrawHistory() {
                 const name =
                     document.createElement("span");
 
+
                 name.textContent =
                     pokemon.nombre;
 
@@ -848,6 +921,7 @@ function renderDrawHistory() {
                 item.appendChild(
                     image
                 );
+
 
                 item.appendChild(
                     name
@@ -960,12 +1034,14 @@ function toggleCell(index) {
             "not-available"
         );
 
+
         /*
          * Forzamos reinicio de la animación
          * para que vuelva a vibrar cada vez.
          */
 
         void cell.offsetWidth;
+
 
         cell.classList.add(
             "not-available"
@@ -1007,14 +1083,17 @@ function toggleCell(index) {
             index
         );
 
+
         cell.classList.remove(
             "marked"
         );
+
 
         const stamp =
             cell.querySelector(
                 ".cell-stamp"
             );
+
 
         if (stamp) {
 
@@ -1024,7 +1103,9 @@ function toggleCell(index) {
 
         }
 
+
         updateProgress();
+
 
         return;
     }
@@ -1085,6 +1166,18 @@ function toggleCell(index) {
      */
 
     checkForBingo();
+
+
+    /*
+     * Si este era el último Pokémon del bombo
+     * y todavía no hemos conseguido BINGO,
+     * el temporizador de gracia seguirá activo.
+     *
+     * Si conseguimos BINGO, checkForBingo()
+     * habrá puesto gameFinished = true y
+     * cancelaremos ese temporizador.
+     */
+
 }
 
 
@@ -1167,6 +1260,7 @@ function celebrateLine() {
 
     playLineSound();
 
+
     showToast(
         "Has conseguido tu primera Línea, ya estás más cerca de completarlo",
         "success"
@@ -1215,6 +1309,16 @@ function checkForBingo() {
     }
 
 
+    /*
+     * Hemos conseguido BINGO.
+     *
+     * Cancelamos el temporizador especial
+     * del último Pokémon, si estaba activo.
+     */
+
+    clearFinalDrawTimeout();
+
+
     gameFinished =
         true;
 
@@ -1242,9 +1346,11 @@ function showBingo() {
     // 🔊 Reproducir el mismo sonido de la línea
     playLineSound();
 
+
     bingoOverlay.classList.add(
         "show"
     );
+
 
     createConfetti();
 }
@@ -1275,6 +1381,7 @@ function createConfetti() {
 
         const confetti =
             document.createElement("div");
+
 
         confetti.className =
             "confetti";
@@ -1327,6 +1434,14 @@ function finishWithoutBingo() {
     if (gameFinished) {
         return;
     }
+
+
+    /*
+     * Cancelamos cualquier temporizador pendiente
+     * relacionado con el último Pokémon.
+     */
+
+    clearFinalDrawTimeout();
 
 
     gameFinished =
@@ -1410,6 +1525,24 @@ function stopDrawTimer() {
 
 
 /* ============================================================
+   DETENER TEMPORIZADOR DEL ÚLTIMO POKÉMON
+============================================================ */
+
+function clearFinalDrawTimeout() {
+
+    if (finalDrawTimeout !== null) {
+
+        clearTimeout(
+            finalDrawTimeout
+        );
+
+        finalDrawTimeout =
+            null;
+    }
+}
+
+
+/* ============================================================
    TOAST
 ============================================================ */
 
@@ -1471,9 +1604,11 @@ newCardButton.addEventListener(
             "show"
         );
 
+
         noBingoOverlay.classList.remove(
             "show"
         );
+
 
         createNewCard();
 
@@ -1489,6 +1624,7 @@ playAgainButton.addEventListener(
             "show"
         );
 
+
         createNewCard();
 
     }
@@ -1502,6 +1638,7 @@ playAgainNoBingo.addEventListener(
         noBingoOverlay.classList.remove(
             "show"
         );
+
 
         createNewCard();
 
