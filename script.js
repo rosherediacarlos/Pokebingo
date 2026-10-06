@@ -29,7 +29,7 @@ const DRAW_INTERVAL = 5000;
     8000 = 8 segundos
 */
 
-const FINAL_DRAW_GRACE_PERIOD = 5000;
+const FINAL_DRAW_GRACE_PERIOD = 8000;
 
 
 /*
